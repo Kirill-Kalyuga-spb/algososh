@@ -1,6 +1,6 @@
 .form {
     margin: 0 auto;
-    max-width: 50%;
+    max-width: 944px;
     display: flex;
     align-items: center;
     gap: 12px;
@@ -21,4 +21,16 @@
     justify-content: center;
     align-items: end;
     gap: 10px;
+}
+
+.button {
+    width: 205px;
+}
+
+.button:nth-child(3) {
+    margin-right: 68px;
+}
+
+.buttonArr {
+    width: 168px;
 }
