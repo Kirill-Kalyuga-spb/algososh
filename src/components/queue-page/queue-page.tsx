@@ -8,44 +8,82 @@ import style from '../stack-page/stack-page.module.css'
 import { ElementStates } from "../../types/element-states";
 import sleep from "../../utils/sleep";
 
-const time = 300
+const time = 1000
+const size = 7
+const emptyArr = ['', '', '', '', '', '', '']
 
 export const QueuePage: React.FC = () => {
   const [value, setValue] = useState('')
   const [loader, setLoader] = useState({name: 'default', loading: false})
-  const [lastIndex, setLastIndex] = useState(0)
 
-  const [stack, setStack] = useState<Array<string>>(['', '', '', '', '', '', ''])
-  const [queue, setQueue] = useState<Array<string>>(['', '', '', '', '', '', ''])
+  const [lastElem, setLastElem] = useState(false)
+  const [firstElem, setFirstElem] = useState(false)
 
-  const head = 0
-  const tail = 0
+  const [queue, setQueue] = useState<Array<string>>(emptyArr)
 
-  const enqueue = (item: string) => queue.push(item);
-  const dequeue = () => queue.shift();
+  const [head, setHead] = useState(0)
+  const [tail, setTail] = useState(0)
+  const [length, setLength] = useState(0)
+
+  const state = (index: number) => {
+    if(tail === index && lastElem) {
+      return ElementStates.Changing
+    }
+    if(head === index && firstElem) {
+      return ElementStates.Changing
+    }
+    return ElementStates.Default
+  }
+
+  const enqueue = (item: string) => {
+    queue[tail] = item
+    if (tail === size - 1) { setTail(0) }
+    else { setTail(tail + 1) }
+    setLength(length + 1)
+  }
+  const dequeue = () => {
+    if (length !== 0) {
+      queue[head] = ''
+      if (head === size - 1) {setHead(0)}
+      else {setHead(head + 1)}
+      setLength(length - 1)
+    }
+    if(length - 1 === 0) {
+      setHead(0)
+      setTail(0)
+    }
+  }
 
   const addElement = async () => {
     setLoader({ name: 'add', loading: true})
-    stack.push(value)
-    setValue('')
-    setStack([...stack])
+    setLastElem(true)
     await sleep(time)
-    setLastIndex(lastIndex + 1)
+
+    enqueue(value)
+    setQueue([...queue])
+    
+    setValue('')
     setLoader({ ...loader})
+    setLastElem(false)
   }
 
   const deleteElement = async () => {
     setLoader({ name: 'delete', loading: true})
-    setLastIndex(lastIndex - 1)
+    setFirstElem(true)
     await sleep(time)
-    stack.pop()
-    setStack([...stack])
+
+    dequeue()
+    setQueue([...queue]) 
+
     setLoader({ ...loader})
+    setFirstElem(false)
   }
 
   const clearStack = () => {
-    setStack([])
-    setLastIndex(0)
+    setQueue(['', '', '', '', '', '', ''])
+    setHead(0)
+    setTail(0)
+    setLength(0)
   }
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -64,39 +102,35 @@ export const QueuePage: React.FC = () => {
         <Button
           text="Добавить"
           type="button"
-          disabled={!value || loader.loading || stack.length > 19}
+          disabled={!value || loader.loading || length > size - 1}
           onClick={addElement}
           isLoader={loader.loading && loader.name === 'add'}
         />
         <Button
           text="Удалить"
           type="button"
-          disabled={!stack.length || loader.loading}
+          disabled={!length || loader.loading}
           onClick={deleteElement}
           isLoader={loader.loading && loader.name === 'delete'}
         />
         <Button
           text="Очистить"
           type="button"
-          disabled={!stack.length || loader.loading}
+          disabled={!length || loader.loading}
           extraClass={style.button}
           onClick={clearStack}
         />
       </div>
       <ul className={style.symbolList}>
-        {stack?.map((item, index) => {
+        {queue?.map((item, index) => {
           return (
             <Circle
               key={nanoid()}
               index={index}
               letter={item}
-              state={
-                index === lastIndex
-                  ? ElementStates.Changing
-                  : ElementStates.Default
-              }
-              head={stack.length - 1 === index ? "head" : ""}
-              tail={stack.length - 2 === index ? "tail" : ""}
+              state={state(index)}
+              head={index === head && length !== 0 ? "head" : ""}
+              tail={((index === tail - 1) || (tail === 0 && index === size - 1)) && length !== 0 ? "tail" : ""}
             />
           );
         })}
