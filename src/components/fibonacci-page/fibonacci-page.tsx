@@ -45,7 +45,7 @@ export const FibonacciPage: React.FC = () => {
     <SolutionLayout title="Последовательность Фибоначчи">
       <form className={style.form} onSubmit={onSubmit}>
         <Input
-          min={0}
+          min={1}
           max={19}
           isLimitText
           onChange={onChange}
@@ -56,7 +56,7 @@ export const FibonacciPage: React.FC = () => {
           text="Рассчитать"
           isLoader={loader}
           type="submit"
-          disabled={!value || (Number(value) > 19 || Number(value) < 0)}
+          disabled={!value || (Number(value) > 19 || Number(value) < 1)}
         />
       </form>
       {arr !== undefined && (<ul className={style.symbolList} style={arr.length > 9 ? {justifyContent: "start"} : {}}>

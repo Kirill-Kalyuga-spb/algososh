@@ -7,8 +7,9 @@ import { nanoid } from "nanoid";
 import style from './stack-page.module.css'
 import { ElementStates } from "../../types/element-states";
 import sleep from "../../utils/sleep";
+import {stack as stackExemplar} from './Stack'
 
-const time = 300
+const time = 500
 
 export const StackPage: React.FC = () => {
   const [value, setValue] = useState('')
@@ -18,9 +19,9 @@ export const StackPage: React.FC = () => {
 
   const addElement = async () => {
     setLoader({ name: 'add', loading: true})
-    stack.push(value)
+    stackExemplar.push(value)
     setValue('')
-    setStack([...stack])
+    setStack([...stackExemplar.getStack()])
     await sleep(time)
     setLastIndex(lastIndex + 1)
     setLoader({ ...loader})
@@ -30,12 +31,13 @@ export const StackPage: React.FC = () => {
     setLoader({ name: 'delete', loading: true})
     setLastIndex(lastIndex - 1)
     await sleep(time)
-    stack.pop()
-    setStack([...stack])
+    stackExemplar.pop()
+    setStack([...stackExemplar.getStack()])
     setLoader({ ...loader})
   }
 
   const clearStack = () => {
+    stackExemplar.clear()
     setStack([])
     setLastIndex(0)
   }

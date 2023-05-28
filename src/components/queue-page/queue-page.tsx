@@ -7,10 +7,12 @@ import { nanoid } from "nanoid";
 import style from '../stack-page/stack-page.module.css'
 import { ElementStates } from "../../types/element-states";
 import sleep from "../../utils/sleep";
+import {Queue} from './Queue'
 
 const time = 1000
 const size = 7
-const emptyArr = ['', '', '', '', '', '', '']
+
+const queueExemplar = new Queue<string>(size);
 
 export const QueuePage: React.FC = () => {
   const [value, setValue] = useState('')
@@ -19,7 +21,7 @@ export const QueuePage: React.FC = () => {
   const [lastElem, setLastElem] = useState(false)
   const [firstElem, setFirstElem] = useState(false)
 
-  const [queue, setQueue] = useState<Array<string>>(emptyArr)
+  const [queue, setQueue] = useState<Array<string>>(queueExemplar.getElements())
 
   const [head, setHead] = useState(0)
   const [tail, setTail] = useState(0)
@@ -35,32 +37,15 @@ export const QueuePage: React.FC = () => {
     return ElementStates.Default
   }
 
-  const enqueue = (item: string) => {
-    queue[tail] = item
-    if (tail === size - 1) { setTail(0) }
-    else { setTail(tail + 1) }
-    setLength(length + 1)
-  }
-  const dequeue = () => {
-    if (length !== 0) {
-      queue[head] = ''
-      if (head === size - 1) {setHead(0)}
-      else {setHead(head + 1)}
-      setLength(length - 1)
-    }
-    if(length - 1 === 0) {
-      setHead(0)
-      setTail(0)
-    }
-  }
-
   const addElement = async () => {
     setLoader({ name: 'add', loading: true})
     setLastElem(true)
     await sleep(time)
 
-    enqueue(value)
-    setQueue([...queue])
+    queueExemplar.enqueue(value)
+    setQueue([...queueExemplar.getElements()])
+    setLength(queueExemplar.getLength())
+    setTail(queueExemplar.getTail())
     
     setValue('')
     setLoader({ ...loader})
@@ -72,18 +57,21 @@ export const QueuePage: React.FC = () => {
     setFirstElem(true)
     await sleep(time)
 
-    dequeue()
-    setQueue([...queue]) 
+    queueExemplar.dequeue()
+    setQueue([...queueExemplar.getElements()])
+    setLength(queueExemplar.getLength())
+    setHead(queueExemplar.getHead())
 
     setLoader({ ...loader})
     setFirstElem(false)
   }
 
   const clearStack = () => {
-    setQueue(['', '', '', '', '', '', ''])
-    setHead(0)
-    setTail(0)
-    setLength(0)
+    queueExemplar.clear()
+    setQueue([...queueExemplar.getElements()])
+    setLength(queueExemplar.getLength())
+    setTail(queueExemplar.getTail())
+    setHead(queueExemplar.getHead())
   }
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {

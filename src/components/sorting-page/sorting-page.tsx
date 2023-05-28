@@ -11,29 +11,29 @@ import { Direction } from "../../types/direction";
 
 const time = 100 //ms
 
+const randomArr = () => {
+  const max = 17
+  const min = 3
+  const lengthArr = Math.floor(Math.random() * (max - min + 1) + min)
+  const array: TSorting[] = []
+  for(let i = 0; i < lengthArr; i++ ) {
+    const maxNum = 100
+    let randomNum = Math.floor(Math.random() * (maxNum + 1))
+    for(let j = 0; j < array.length; j++ ) {
+      if(randomNum === array[j].index) {
+        array.splice(j, 1)
+      }
+    }
+    array.push({index: randomNum, state: ElementStates.Default})
+  }
+  return array
+}
+
 export const SortingPage: React.FC = () => {
   const [value, setValue] = useState('choice')
   const [loader, setLoader] = useState({name: 'default', loading: false})
-  const [arr, setArr] = useState<Array<TSorting>>([])
+  const [arr, setArr] = useState<Array<TSorting>>(randomArr())
   const { length } = arr;
-
-  const randomArr = () => {
-    const max = 17
-    const min = 3
-    const lengthArr = Math.floor(Math.random() * (max - min + 1) + min)
-    const array: TSorting[] = []
-    for(let i = 0; i < lengthArr; i++ ) {
-      const maxNum = 100
-      let randomNum = Math.floor(Math.random() * (maxNum + 1))
-      for(let j = 0; j < array.length; j++ ) {
-        if(randomNum === array[j].index) {
-          array.splice(j, 1)
-        }
-      }
-      array.push({index: randomNum, state: ElementStates.Default})
-    }
-    setArr(array)
-  }
 
   const reset = () => {
     for (let i = 0; i < arr?.length; i++) {
@@ -160,7 +160,7 @@ export const SortingPage: React.FC = () => {
         />
         <Button
           text="Новый массив"
-          onClick={randomArr}
+          onClick={() => {setArr(randomArr())}}
           disabled={loader.loading}
           extraClass={style.buttonArr}
         />

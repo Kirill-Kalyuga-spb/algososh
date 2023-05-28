@@ -11,7 +11,7 @@ import sleep from "../../utils/sleep";
 import { ElementStates } from "../../types/element-states";
 
 const list = new LinkedList<string>();
-const time = 500
+const time = 1000
 const loaderNames = {
   addHead: 'addHead',
   addTail: 'addTail',
@@ -30,13 +30,29 @@ export const ListPage: React.FC = () => {
   const [changeIndex, setChangeIndex] = useState('')
   const [indexTail, setIndexTail] = useState('')
   const [endChanges, setEndChanges] = useState('')
+  const [move, setMove] = useState(false)
+  const [moveIndex, setMoveIndex] = useState('')
 
   const removeByIndex = async () => {
     setLoader({name: loaderNames.removeByIndex, loading: true})
     list.removeAt(Number(index))
+
+    setMove(true)
+    setMoveIndex('0')
+    
+    let i = 1
+    while (i < Number(index) + 2) {
+      setMoveIndex(String(i))
+      i++
+      await sleep(time)
+    }
+    setMoveIndex(index)
     setIndexTail(index)
     await sleep(time)
 
+    setMove(false)
+
+    setMoveIndex('')
     setIndexTail('')
     setListArr(list.getArr())
     setIndex('')
@@ -68,9 +84,16 @@ export const ListPage: React.FC = () => {
   const addByIndex = async () => {
     setLoader({name: loaderNames.addByIndex, loading: true})
     list.insertAt(value, Number(index));
-    setChangeIndex(index)
-    await sleep(time)
+    setMove(true)
+    
+    let i = 0
+    while (i < Number(index) + 1) {
+      setChangeIndex(String(i))
+      i++
+      await sleep(time)
+    }
 
+    setMove(false)
     setEndChanges(index)
     setChangeIndex('')
     setListArr(list.getArr())
@@ -133,6 +156,8 @@ export const ListPage: React.FC = () => {
 
   const setCircleState = (index: number) => {
     if(String(index) === endChanges) {return ElementStates.Modified}
+    if(String(index) < changeIndex && move) {return ElementStates.Changing}
+    if(String(index) < moveIndex && move) {return ElementStates.Changing}
     return ElementStates.Default
   }
 
