@@ -7,6 +7,7 @@ import sleep from "../../utils/sleep";
 import { Circle } from "../ui/circle/circle";
 import { nanoid } from "nanoid";
 import { ElementStates, TString } from "../../types/element-states";
+import { DELAY_IN_MS } from "../../constants/delays";
 
 export const StringComponent: React.FC = () => {
   const [value, setValue] = useState('')
@@ -32,7 +33,7 @@ export const StringComponent: React.FC = () => {
         array[i].state = ElementStates.Changing
         array[l].state = ElementStates.Changing
         setArr([...array]);
-        await sleep(1000)
+        await sleep(DELAY_IN_MS)
       }
 
       swap(array, i, l)
@@ -73,9 +74,10 @@ export const StringComponent: React.FC = () => {
           isLoader={loader}
           type="submit"
           disabled={!value}
+          data-testid='submit'
         />
       </form>
-      <ul className={style.symbolList}>
+      <ul className={style.symbolList} data-testid='list'>
         {arr?.map((item) => (
           <Circle key={nanoid()} letter={item.letter} state={item.state} />
         ))}

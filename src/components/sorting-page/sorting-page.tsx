@@ -8,8 +8,9 @@ import { Column } from "../ui/column/column";
 import sleep from "../../utils/sleep";
 import { ElementStates, TSorting } from "../../types/element-states";
 import { Direction } from "../../types/direction";
+import { SHORT_DELAY_IN_MS } from "../../constants/delays";
 
-const time = 100 //ms
+const time = SHORT_DELAY_IN_MS //ms
 
 const randomArr = () => {
   const max = 17
