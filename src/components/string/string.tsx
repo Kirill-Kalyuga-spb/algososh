@@ -68,6 +68,7 @@ export const StringComponent: React.FC = () => {
           isLimitText
           onChange={onChange}
           value={value}
+          data-testid="input"
         />
         <Button
           text="Развернуть"
@@ -79,7 +80,10 @@ export const StringComponent: React.FC = () => {
       </form>
       <ul className={style.symbolList} data-testid='list'>
         {arr?.map((item) => (
-          <Circle key={nanoid()} letter={item.letter} state={item.state} />
+          <Circle
+            key={nanoid()}
+            letter={item.letter}
+            state={item.state} />
         ))}
       </ul>
     </SolutionLayout>
