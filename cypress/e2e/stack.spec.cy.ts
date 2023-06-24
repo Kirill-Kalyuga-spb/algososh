@@ -10,7 +10,7 @@ import {
 } from "./utils"
 import { SHORT_DELAY_IN_MS } from '../../src/constants/delays'
 
-describe('Тест Фибоначчи', () => {
+describe('Тест Stack', () => {
     before(() => {
         cy.visit('/stack')
     })

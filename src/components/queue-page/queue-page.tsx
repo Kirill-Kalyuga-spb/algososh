@@ -8,8 +8,9 @@ import style from '../stack-page/stack-page.module.css'
 import { ElementStates } from "../../types/element-states";
 import sleep from "../../utils/sleep";
 import {Queue} from './Queue'
+import { DELAY_IN_MS } from "../../constants/delays";
 
-const time = 1000
+const time = DELAY_IN_MS
 const size = 7
 
 const queueExemplar = new Queue<string>(size);
@@ -86,6 +87,7 @@ export const QueuePage: React.FC = () => {
           isLimitText
           onChange={onChange}
           value={value}
+          data-testid="input"
         />
         <Button
           text="Добавить"
@@ -93,6 +95,7 @@ export const QueuePage: React.FC = () => {
           disabled={!value || loader.loading || length > size - 1}
           onClick={addElement}
           isLoader={loader.loading && loader.name === 'add'}
+          data-testid="submit"
         />
         <Button
           text="Удалить"
@@ -100,6 +103,7 @@ export const QueuePage: React.FC = () => {
           disabled={!length || loader.loading}
           onClick={deleteElement}
           isLoader={loader.loading && loader.name === 'delete'}
+          data-testid="delete"
         />
         <Button
           text="Очистить"
@@ -107,6 +111,7 @@ export const QueuePage: React.FC = () => {
           disabled={!length || loader.loading}
           extraClass={style.button}
           onClick={clearStack}
+          data-testid="clear"
         />
       </div>
       <ul className={style.symbolList}>
