@@ -54,6 +54,7 @@ export const StackPage: React.FC = () => {
           isLimitText
           onChange={onChange}
           value={value}
+          data-testid="input"
         />
         <Button
           text="Добавить"
@@ -61,6 +62,7 @@ export const StackPage: React.FC = () => {
           disabled={!value || loader.loading || stack.length > 19}
           onClick={addElement}
           isLoader={loader.loading && loader.name === 'add'}
+          data-testid="submit"
         />
         <Button
           text="Удалить"
@@ -68,6 +70,7 @@ export const StackPage: React.FC = () => {
           disabled={!stack.length || loader.loading}
           onClick={deleteElement}
           isLoader={loader.loading && loader.name === 'delete'}
+          data-testid="delete"
         />
         <Button
           text="Очистить"
@@ -75,6 +78,7 @@ export const StackPage: React.FC = () => {
           disabled={!stack.length || loader.loading}
           extraClass={style.button}
           onClick={clearStack}
+          data-testid="clear"
         />
       </div>
       <ul className={style.symbolList}>

@@ -6,6 +6,7 @@ import { Button } from "../ui/button/button";
 import { Input } from "../ui/input/input";
 import style from './fibonacci-page.module.css'
 import sleep from "../../utils/sleep";
+import { SHORT_DELAY_IN_MS } from "../../constants/delays";
 
 export const FibonacciPage: React.FC = () => {
   const [value, setValue] = useState('')
@@ -16,7 +17,7 @@ export const FibonacciPage: React.FC = () => {
     let array: number[] = []
     
     for(let i = 0; i < n + 1; i++) {
-      await sleep(500)
+      await sleep(SHORT_DELAY_IN_MS)
       if(i < 2) {
         array[i] = 1;
         setArr([...array])
@@ -51,12 +52,14 @@ export const FibonacciPage: React.FC = () => {
           onChange={onChange}
           type="number"
           value={value}
+          data-testid="input"
         />
         <Button
           text="Рассчитать"
           isLoader={loader}
           type="submit"
           disabled={!value || (Number(value) > 19 || Number(value) < 1)}
+          data-testid="submit"
         />
       </form>
       {arr !== undefined && (<ul className={style.symbolList} style={arr.length > 9 ? {justifyContent: "start"} : {}}>

@@ -9,9 +9,10 @@ import { Circle } from "../ui/circle/circle";
 import { ArrowIcon } from "../ui/icons/arrow-icon";
 import sleep from "../../utils/sleep";
 import { ElementStates } from "../../types/element-states";
+import { SHORT_DELAY_IN_MS } from "../../constants/delays";
 
 const list = new LinkedList<string>();
-const time = 1000
+const time = SHORT_DELAY_IN_MS
 const loaderNames = {
   addHead: 'addHead',
   addTail: 'addTail',
@@ -180,6 +181,7 @@ export const ListPage: React.FC = () => {
           name="value"
           value={value}
           onChange={onChangeInput}
+          data-testid="input"
         />
         <div className={style.container}>
           <Button
@@ -187,6 +189,7 @@ export const ListPage: React.FC = () => {
             text="Добавить в head"
             extraClass={style.button}
             onClick={addToHead}
+            data-testid="add-head"
             disabled={!value || listArr.length > 6 || loader.loading}
             isLoader={loader.loading && loader.name === loaderNames.addHead}
           />
@@ -195,6 +198,7 @@ export const ListPage: React.FC = () => {
             text="Добавить в tail"
             extraClass={style.button}
             onClick={addToTail}
+            data-testid="add-tail"
             disabled={!value || listArr.length > 6 || loader.loading}
             isLoader={loader.loading && loader.name === loaderNames.addTail}
           />
@@ -205,6 +209,7 @@ export const ListPage: React.FC = () => {
             text="Удалить из head"
             extraClass={style.button}
             onClick={removeFromHead}
+            data-testid="remove-head"
             disabled={!listArr.length || loader.loading}
             isLoader={loader.loading && loader.name === loaderNames.removeHead}
           />
@@ -213,6 +218,7 @@ export const ListPage: React.FC = () => {
             text="Удалить из tail"
             extraClass={style.button}
             onClick={removeFromTail}
+            data-testid="remove-tail"
             disabled={!listArr.length || loader.loading}
             isLoader={loader.loading && loader.name === loaderNames.removeTail}
           />
@@ -225,11 +231,13 @@ export const ListPage: React.FC = () => {
           max={listArr.length - 1}
           value={index}
           onChange={onChangeIndexInput}
+          data-testid="input-index"
         />
         <Button
           type="button"
           text="Добавить по индексу"
           onClick={addByIndex}
+          data-testid="add-by-index"
           disabled={
             !(index && value) ||
             Number(index) > listArr.length - 1 ||
@@ -243,6 +251,7 @@ export const ListPage: React.FC = () => {
           type="button"
           text="Удалить по индексу"
           onClick={removeByIndex}
+          data-testid="remove-by-index"
           disabled={
             !listArr.length || 
             Number(index) > listArr.length - 1 ||
